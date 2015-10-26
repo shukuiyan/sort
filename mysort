@@ -1,0 +1,399 @@
+package com.yan.sort;
+
+public class SortAll
+{
+	public static void main(String args[])
+	{
+		int array[] =
+		{ 4, 5, 62, 2, 1, 41, 630, 2, 0, 2, -9, 5, 4 };
+		mergeSort(array, 0, array.length - 1);
+		for (int i = 0; i < array.length; i++)
+		{
+			System.out.print(array[i] + ",");
+		}
+	}
+
+	/**
+	 * 选择排序
+	 * 首先在未排序序列中找到最小元素，存放到排序序列的起始位置，
+	 * 然后，再从剩余未排序元素中继续寻找最小元素，然后放到排序序列末尾，以此类推，直到所有元素均排序完毕
+	 * O(n*n)
+	 * @param array
+	 */
+	public static void selectSort(int array[])
+	{
+		if (array == null || array.length <= 0)
+		{
+			return;
+		}
+
+		for (int i = 0; i < array.length; i++)
+		{
+			int min = i;
+			for (int j = i + 1; j < array.length; j++)
+			{
+				if (array[j] < array[min])
+				{
+					min = j;
+				}
+			}
+			if (min != i)
+			{
+				int temp = array[i];
+				array[i] = array[min];
+				array[min] = temp;
+			}
+		}
+	}
+
+	/**
+	 * 插入排序：
+	 * 通过构建有序序列，对于未排序数据，在已排序序列从后往前扫描找到相应位置插入
+	 * 空间复杂度O(1)
+	 * 时间复杂度 O(n)
+	 * 如果目标是把n个元素的序列升序排列，那么采用直接插入排序存在最好情况和最坏情况。
+	 * 最好情况就是，序列已经是升序排列了，在这种情况下，需要进行的比较操作需(n-1)次即可。
+	 * 最坏情况就是，序列是降序排列，那么此时需要进行的比较共有n(n-1)/2次。
+	 * 直接插入排序的赋值操作是比较操作的次数减去(n-1)次。平均来说直接插入排序算法复杂度为O(n2)。
+	 * 因而，直接插入排序不适合对于数据量比较大的排序应用。
+	 * 但是，如果需要排序的数据量很小，例如，量级小于千，那么直接插入排序还是一个不错的选择。 
+	 * 插入排序在工业级库中也有着广泛的应用，在STL的sort算法和stdlib的qsort算法中，
+	 * 都将插入排序作为快速排序的补充，用于少量元素的排序（通常为8个或以下）。
+	 * @param array
+	 */
+	public static void commonInsertSort(int array[])
+	{
+		if (array == null || array.length <= 0)
+		{
+			return;
+		}
+		for (int i = 1; i < array.length; i++)
+		{
+			int temp = array[i];
+			int j = i - 1;
+			while (j >= 0 && temp < array[j])//开始查找当前temp元素对应前面已经排序好的队列中的位置
+			{
+				array[j + 1] = array[j];//每个元素后移一位
+				j--;
+			}
+			array[j + 1] = temp;
+		}
+
+		/* 算法2
+		 * for (int i = 0; i < data.length - 1; i++)
+		{
+			for (int j = i + 1; j >= 1; j--)
+			{
+				if (data[j] < data[j - 1])
+				{
+					//如果后面的数字小于前面的数字，则两个数字位置交换
+
+					int temp = data[j];
+					data[j] = data[j - 1];
+					data[j - 1] = temp;
+				}
+			}
+		}*/
+
+	}
+
+	/**
+	 * 希尔排序
+	 * 基本思想：先取一个小于n的整数d1,作为第一个增量，把文件的全部记录分成d1个组。所有距离为d1的倍数的记录放在同一个组内。
+	 * 先在各个组内进行直接插入排序；然后，去第二个增量d2<d1重复上述的分组和排序，直至所取的增量dt=1（dt<dt-1<...<d2<d1），
+	 * 即所有记录放在同一组中进行直接插入排序为止
+	 * 
+	 * @param array
+	 */
+	public static void shellSort(int[] array)
+	{
+		if (array == null || array.length <= 0)
+		{
+			return;
+		}
+		int d = array.length;
+		while (d > 0)
+		{
+			shell(array, d);
+			d /= 2;
+		}
+	}
+
+	/**
+	 * 间隔是d的数组进行直接插入排序
+	 * @param array
+	 * @param d
+	 */
+	public static void shell(int[] array, int d)
+	{
+		if (array == null || array.length <= 0 || d == 0 || d > array.length)
+		{
+			return;
+		}
+
+		for (int i = d; i < array.length; i += d)
+		{
+			int temp = array[i];
+			int j = i - d;
+			while (j >= 0 && temp < array[j])
+			{
+				array[j + d] = array[j];
+				j -= d;
+			}
+			array[j + d] = temp;
+		}
+	}
+
+	/**
+	 * 冒泡排序思想：两两相邻元素之间的比较,如果前者大于后者，则交换；
+	 * 升序排序
+	 * 稳定排序
+	 * 复杂度为O(n^2)
+	 * @param array
+	 */
+	public static void bubble_sort(int array[])
+	{
+		if (array == null || array.length <= 0)
+		{
+			return;
+		}
+		int size = array.length;
+		for (int i = size - 1; i > 0; i--)
+		{
+			for (int j = 0; j < i; j++)
+			{
+				if (array[j] > array[j + 1])
+				{
+					int temp = array[j];
+					array[j] = array[j + 1];
+					array[j + 1] = temp;
+				}
+			}
+			System.out.print("第" + (size - i) + "次排序后：");
+			for (int k = 0; k < array.length; k++)
+			{
+				System.out.print(array[k] + ",");
+			}
+			System.out.println();
+		}
+	}
+
+	/**
+	 * 改进冒泡排序：通过一个boolean isChanged，如果一次循环中没有交换过元素，则说明已经排好序；
+	 * 升序排序
+	 * 稳定排序
+	 * @param array
+	 */
+	public static void bubble_sort2(int array[])
+	{
+		if (array == null || array.length <= 0)
+		{
+			return;
+		}
+		int size = array.length;
+		for (int i = size - 1; i > 0; i--)
+		{
+			boolean isChanged = false;
+			for (int j = 0; j < i && isChanged; j++)
+			{
+				if (array[j] > array[j + 1])
+				{
+					int temp = array[j];
+					array[j] = array[j + 1];
+					array[j + 1] = temp;
+					isChanged = true;
+				}
+			}
+			System.out.print("第" + (size - i) + "次排序后：");
+			for (int k = 0; k < array.length; k++)
+			{
+				System.out.print(array[k] + ",");
+			}
+			System.out.println();
+		}
+	}
+
+	/**
+	 * 快速排序
+	 * 通过一趟排序将要排序的数据分割成独立的两部分，其中一部分所有数据都比另外一部分数据小。
+	 * 然后按照此方法分别对两部分数据进行快速排序，整个过程可以使用递归进行，以达到排序目的
+	 * @param array
+	 */
+	public static void quickSort(int[] array)
+	{
+		partition(array, 0, array.length - 1);
+	}
+
+	/**
+	 * 对数据从第start位置的元素到第end位置的元素进行一趟排序
+	 * @param array
+	 * @param start
+	 * @param end
+	 */
+	public static void partition(int[] array, int start, int end)
+	{
+		if (array == null || array.length <= 0 || start < 0 || end > array.length - 1)
+		{
+			return;
+		}
+		int key = array[start];
+		int i = start;
+		int j = end;
+		while (i < j)
+		{
+			while (i < j && array[j] >= key)//从右侧开始寻找第一个小于key的值
+			{
+				j--;
+			}
+			if (i < j)
+			{
+				array[i] = array[j];
+			}
+			while (i < j && array[i] <= key)//从左侧开始需找第一个大于key的值
+			{
+				i++;
+			}
+			if (i < j)
+			{
+				array[j] = array[i];
+			}
+		}
+		array[i] = key;
+		if (i > start)
+		{
+			partition(array, start, i - 1);
+		}
+		if (i < end)
+		{
+			partition(array, i + 1, end);
+		}
+	}
+
+	/**
+	 * 堆排序
+	 * 排序过程中，第i次取堆顶记录重建大顶堆的时间复杂度为O(logi)，并且需要取n-1次堆顶记录，所有重建堆的时间复杂度为O(nlogn)。总体上来说，堆排序的时间复杂度为：O(nlogn)。
+	 * 因为初始化构建堆所需比较次数较多，所以堆排序不适合待排序元素较少的情况。
+	 * 堆排序的平均时间复杂度为Ｏ(nlogn)，空间复杂度为Ｏ(1)
+	 * @param array
+	 */
+	public static void headSort(int[] array)
+	{
+		for (int i = array.length / 2 - 1; i >= 0; i--)
+		{
+			heapAdjust(array, i, array.length - 1);
+		}//建立大顶堆  时间复杂度为O(n)
+
+		int temp = array[0];
+		array[0] = array[array.length - 1];
+		array[array.length - 1] = temp;//交换最大的元素至堆尾
+
+		for (int i = array.length - 2; i > 0; i--)
+		{
+			heapAdjust(array, 0, i);
+
+			temp = array[0];
+			array[0] = array[i];
+			array[i] = temp;
+		}
+
+	}
+
+	/**
+	 * 堆的一次调整
+	 * array[s...m]中除了array[s]之外均满足堆的定义
+	 * 本地调整array[s]元素，使待排数组array构成大顶堆
+	 * array[i]的两个左右子树元素为array[2*i+1]和array[2*i+2]
+	 * @param array
+	 * @param s
+	 * @param m
+	 */
+	public static void heapAdjust(int[] array, int s, int m)
+	{
+		for (int i = 2 * s + 1; i <= m; i = i * 2 + 1)
+		{
+			int temp = array[s];
+			if (i < m && array[i] < array[i + 1])//取左右子树中值大的那个
+			{
+				i++;
+			}
+			if (array[i] >= temp)////将当前父节点值与左右子树值大的那个节点值交换位置
+			{
+				array[s] = array[i];
+				array[i] = temp;
+				s = i;//下一个要调整的堆顶节点
+			}
+		}
+	}
+
+	/**
+	 * 归并（Merge）排序法是将两个（或两个以上）有序表合并成一个新的有序表，即把待排序序列分为若干个子序列，每个子序列是有序的。然后再把有序子序列合并为整体有序序列
+	 * 归并算法是效率仅次于快排，并且稳定的排序
+	 * @param array
+	 * @param start
+	 * @param end
+	 */
+	public static void mergeSort(int array[], int start, int end)
+	{
+		if (start >= end)
+		{
+			return;
+		}
+		int mid = (start + end) / 2;
+		mergeSort(array, start, mid);
+		mergeSort(array, mid + 1, end);
+		merge(array, start, mid, end);
+	}
+
+	/**
+	 * array[start...mid]与array[mid+1...end]是两个都排序好的数组，该方法将两个部分排序好
+	 * 申请空间，使其大小为两个已经排序序列之和，该空间用来存放合并后的序列
+	 * 设定两个指针，最初位置分别为两个已经排序序列的起始位置
+	 * 比较两个指针所指向的元素，选择相对小的元素放入到合并空间，并移动指针到下一位置
+	 * 重复步骤3直到某一指针达到序列尾
+	 * 将另一序列剩下的所有元素直接复制到合并序列尾
+	 * @param array
+	 * @param start
+	 * @param mid
+	 * @param end
+	 */
+	public static void merge(int array[], int start, int mid, int end)
+	{
+		if (start > mid || mid > end || start < 0 || end > array.length - 1)
+		{
+			return;
+		}
+		int temp[] = new int[end - start + 1];
+		int i = start;
+		int j = mid + 1;
+		int k = 0;
+		while (i <= mid && j <= end)
+		{
+			if (array[i] <= array[j])
+			{
+				temp[k++] = array[i++];
+			}
+			else
+			{
+				temp[k++] = array[j++];
+			}
+		}
+		if (i <= mid)
+		{
+			for (int s = i; s <= mid; s++)
+			{
+				temp[k++] = array[s];
+			}
+		}
+		if (j <= end)
+		{
+			for (int s = j; s <= end; s++)
+			{
+				temp[k++] = array[s];
+			}
+		}
+		for (i = start, j = 0; i <= end; i++, j++)
+		{
+			array[i] = temp[j];
+		}
+	}
+}
